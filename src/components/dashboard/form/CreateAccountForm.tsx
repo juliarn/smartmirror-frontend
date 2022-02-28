@@ -17,8 +17,18 @@ const CreateAccountForm = () => {
     if (!username.trim()) {
       setUsernameError('Please provide a username.');
     }
+    if (!firstName.trim()) {
+      setFirstNameError('Please provide a first name.');
+    }
     if (!password.trim()) {
       setPasswordError('Please provide a password.');
+    }
+    if (!repeatPassword.trim()) {
+      setRepeatPasswordError('Please repeat your password.');
+    }
+    if (password !== repeatPassword) {
+      setPasswordError('The provided passwords do not match.');
+      setRepeatPasswordError('The provided passwords do not match.');
     }
 
     // TODO: send to backend

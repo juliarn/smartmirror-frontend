@@ -16,7 +16,7 @@ const FormField = (props: FormFieldProps) => {
         className="block text-gray-700 text-sm font-bold mb-2"
         htmlFor={props.name.toLowerCase()}
       >
-        Username
+        {props.name}
       </label>
       <input
         value={props.value}
