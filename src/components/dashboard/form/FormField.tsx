@@ -11,9 +11,9 @@ interface FormFieldProps {
 
 const FormField = (props: FormFieldProps) => {
   return (
-    <div className="mb-4">
+    <div className="my-2">
       <label
-        className="block text-gray-700 text-sm font-bold mb-2"
+        className="block bold text-gray-700 text-sm mb-1"
         htmlFor={props.name.toLowerCase()}
       >
         {props.name}
@@ -28,12 +28,12 @@ const FormField = (props: FormFieldProps) => {
         }}
         className={`shadow appearance-none border ${
           props.valueError ? 'border-red-500' : ''
-        } rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+        } rounded-md w-full py-2 px-3 text-gray-700 mb-1 leading-tight focus:outline-none focus:shadow-outline`}
         id={props.name.toLowerCase()}
         type={props.type ?? 'text'}
         placeholder={props.name}
       />
-      <p className="text-red-500 text-xs italic">{props.valueError}</p>
+      <p className="m-0 p-0 text-red-500 text-xs italic">{props.valueError}</p>
     </div>
   );
 };
