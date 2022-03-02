@@ -6,17 +6,23 @@ import {HashRouter, Route, Routes} from 'react-router-dom';
 import LoginForm from './components/dashboard/form/LoginForm';
 import RegisterForm from './components/dashboard/form/RegisterForm';
 import DashboardScreen from './components/dashboard/DashboardScreen';
+import DashboardContent from './components/dashboard/DashboardContent';
+import {Provider} from 'react-redux';
+import store from './store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <HashRouter>
-      <Routes>
-        <Route path={'/dashboard'} element={<DashboardScreen />}>
-          <Route path={'/dashboard/login'} element={<LoginForm />} />
-          <Route path={'/dashboard/register'} element={<RegisterForm />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <Routes>
+          <Route path={'/dashboard'} element={<DashboardScreen />}>
+            <Route path={'/dashboard/'} element={<DashboardContent />} />
+            <Route path={'/dashboard/login'} element={<LoginForm />} />
+            <Route path={'/dashboard/register'} element={<RegisterForm />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,3 +1,5 @@
+import createRequest from './index';
+
 export interface AccountInfo {
   username: string;
   firstName: string;
@@ -15,35 +17,19 @@ export interface RegisterForm extends LoginForm {
 export async function register(
   registerForm: RegisterForm
 ): Promise<string | null> {
-  const response = await fetch('api/account/register', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(registerForm),
-  });
+  const response = await createRequest(
+    'account/register',
+    'POST',
+    registerForm
+  );
   return response.ok ? null : (await response.json())['message'];
 }
 
-export async function login(loginForm: LoginForm): Promise<boolean> {
-  const response = await fetch('api/account/login', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(loginForm),
-  });
-
-  return response.headers.has('set-cookie');
+export async function login(loginForm: LoginForm): Promise<void> {
+  await createRequest('account/login', 'POST', loginForm);
 }
 
 export async function getInfo(): Promise<AccountInfo | null> {
-  const response = await fetch('api/account/info', {
-    method: 'GET',
-    credentials: 'include',
-  });
-
+  const response = await createRequest('account/info');
   return response.ok ? await response.json() : null;
 }

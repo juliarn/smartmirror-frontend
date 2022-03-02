@@ -1,7 +1,18 @@
-import React from 'react';
-import {Outlet} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {Outlet, useOutletContext} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../store';
+import {getAccountInfo} from '../../store/accountSlice';
+import {AccountInfo} from '../../api/account';
 
 function DashboardScreen() {
+  const {accountInfo} = useSelector((state: RootState) => state.account);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAccountInfo());
+  }, []);
+
   return (
     <div className={'flex items-center min-h-screen bg-gray-50'}>
       <div className="container mx-auto">
@@ -11,11 +22,15 @@ function DashboardScreen() {
               SmartMirror
             </h1>
           </div>
-          <Outlet />
+          <Outlet context={accountInfo} />
         </div>
       </div>
     </div>
   );
+}
+
+export function useAccountInfo() {
+  return useOutletContext<AccountInfo | null>();
 }
 
 export default DashboardScreen;
