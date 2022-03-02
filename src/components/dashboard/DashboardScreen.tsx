@@ -11,7 +11,7 @@ function DashboardScreen() {
 
   useEffect(() => {
     dispatch(getAccountInfo());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={'flex items-center min-h-screen bg-gray-50'}>

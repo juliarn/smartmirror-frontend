@@ -8,12 +8,26 @@ export const getAccountInfo = createAsyncThunk<AccountInfo | null>(
   }
 );
 
+interface AccountState {
+  accountInfo: AccountInfo | null;
+}
+
+const initialState = {
+  accountInfo: null,
+} as AccountState;
+
 const accountSlice = createSlice({
   name: 'account',
-  initialState: {
-    accountInfo: null,
-  },
+  initialState,
   reducers: {},
+  extraReducers: builder => {
+    builder.addCase(
+      getAccountInfo.fulfilled,
+      (state: AccountState, {payload}) => {
+        state.accountInfo = payload;
+      }
+    );
+  },
 });
 
 export default accountSlice.reducer;
