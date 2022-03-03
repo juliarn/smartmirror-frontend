@@ -1,15 +1,14 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../store';
-import {getAccountInfo} from '../../store/accountSlice';
+import React from 'react';
+import {useAccountInfo} from './DashboardScreen';
+import {useNavigate} from 'react-router-dom';
 
 const DashboardContent = () => {
-  const {accountInfo} = useSelector((state: RootState) => state.account);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const accountInfo = useAccountInfo();
 
-  useEffect(() => {
-    dispatch(getAccountInfo());
-  }, [dispatch]);
+  if (accountInfo === null) {
+    navigate('/dashboard/login');
+  }
 
   return <>{accountInfo ? accountInfo.username : 'no account info'}</>;
 };

@@ -1,7 +1,10 @@
 import React, {FormEvent, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
-import {getInfo, login} from '../../../api/account';
+import {useAccountInfo} from '../DashboardScreen';
+import {getAccountInfo} from '../../../store/accountSlice';
+import store from '../../../store';
+import {login} from '../../../api/account';
 
 const LoginForm = () => {
   const [username, setUsername] = useState<string>('');
@@ -11,6 +14,10 @@ const LoginForm = () => {
   const [passwordError, setPasswordError] = useState<string>('');
 
   const navigate = useNavigate();
+
+  if (useAccountInfo()) {
+    navigate('/dashboard');
+  }
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -25,9 +32,8 @@ const LoginForm = () => {
     }
 
     await login({username, password});
-    if (await getInfo()) {
-      navigate('/dashboard', {replace: true});
-    } else {
+    const accountInfo = await store.dispatch(getAccountInfo()).unwrap();
+    if (accountInfo === null) {
       setUsernameError('Invalid username or password.');
       setPasswordError('Invalid username or password.');
     }

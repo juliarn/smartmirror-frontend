@@ -2,25 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {HashRouter, Route, Routes} from 'react-router-dom';
-import LoginForm from './components/dashboard/form/LoginForm';
-import RegisterForm from './components/dashboard/form/RegisterForm';
-import DashboardScreen from './components/dashboard/DashboardScreen';
-import DashboardContent from './components/dashboard/DashboardContent';
 import {Provider} from 'react-redux';
 import store from './store';
+import App from './components/App';
+import {HashRouter} from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <HashRouter>
-        <Routes>
-          <Route path={'/dashboard'} element={<DashboardScreen />}>
-            <Route path={'/dashboard/'} element={<DashboardContent />} />
-            <Route path={'/dashboard/login'} element={<LoginForm />} />
-            <Route path={'/dashboard/register'} element={<RegisterForm />} />
-          </Route>
-        </Routes>
+        <App />
       </HashRouter>
     </Provider>
   </React.StrictMode>,

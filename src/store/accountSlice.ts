@@ -8,12 +8,14 @@ export const getAccountInfo = createAsyncThunk<AccountInfo | null>(
   }
 );
 
+export type AccountInfoState = AccountInfo | undefined | null;
+
 interface AccountState {
-  accountInfo: AccountInfo | null;
+  accountInfo: AccountInfoState;
 }
 
 const initialState = {
-  accountInfo: null,
+  accountInfo: undefined,
 } as AccountState;
 
 const accountSlice = createSlice({
@@ -27,6 +29,12 @@ const accountSlice = createSlice({
         state.accountInfo = payload;
       }
     );
+    builder.addCase(getAccountInfo.pending, (state: AccountState) => {
+      state.accountInfo = undefined;
+    });
+    builder.addCase(getAccountInfo.rejected, (state: AccountState) => {
+      state.accountInfo = null;
+    });
   },
 });
 

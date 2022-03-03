@@ -2,6 +2,7 @@ import React, {FormEvent, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
 import {register} from '../../../api/account';
+import {useAccountInfo} from '../DashboardScreen';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState<string>('');
@@ -15,6 +16,10 @@ const RegisterForm = () => {
   const [repeatPasswordError, setRepeatPasswordError] = useState<string>('');
 
   const navigate = useNavigate();
+
+  if (useAccountInfo()) {
+    navigate('/dashboard');
+  }
 
   const handleRegister = async (event: FormEvent) => {
     event.preventDefault();
