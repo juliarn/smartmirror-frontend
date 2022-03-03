@@ -64,7 +64,7 @@ const widgetSettingSlice = createSlice({
           const settings = state.widgetSettings.get(meta.arg.widgetName);
           if (settings) {
             const index = settings.findIndex(
-              setting => setting.name === payload.name
+              setting => setting.settingName === payload.settingName
             );
             settings[index] = payload;
           }

@@ -25,7 +25,7 @@ export interface UpdateWidgetPositionForm extends WidgetPosition {
 }
 
 export interface WidgetSetting {
-  name: string;
+  settingName: string;
   value: string;
 }
 
