@@ -1,10 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {AccountInfo, getInfo} from '../api/account';
+import {AccountInfo, getInfo, logout} from '../api/account';
 
 export const requestAccountInfo = createAsyncThunk<AccountInfo | null>(
   'account/requestAccountInfo',
   async () => {
     return await getInfo();
+  }
+);
+
+export const requestLogout = createAsyncThunk<void>(
+  'account/requestLogout',
+  async () => {
+    return await logout();
   }
 );
 
@@ -33,6 +40,9 @@ const accountSlice = createSlice({
       state.accountInfo = undefined;
     });
     builder.addCase(requestAccountInfo.rejected, (state: AccountState) => {
+      state.accountInfo = null;
+    });
+    builder.addCase(requestLogout.fulfilled, (state: AccountState) => {
       state.accountInfo = null;
     });
   },

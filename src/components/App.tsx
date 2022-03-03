@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {Route, Routes} from 'react-router-dom';
-import DashboardScreen from './dashboard/DashboardScreen';
-import DashboardContent from './dashboard/DashboardContent';
-import LoginForm from './dashboard/form/LoginForm';
-import RegisterForm from './dashboard/form/RegisterForm';
+import Account from './account/Account';
+import Dashboard from './dashboard/Dashboard';
+import LoginForm from './account/form/LoginForm';
+import RegisterForm from './account/form/RegisterForm';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store';
 import {requestAccountInfo} from '../store/accountSlice';
+import NotFound from './NotFound';
 
 const App = () => {
   const {accountInfo} = useSelector((state: RootState) => state.account);
@@ -19,14 +20,15 @@ const App = () => {
   return (
     <>
       <Routes>
+        <Route path={'/'} element={<Dashboard accountInfo={accountInfo} />} />
         <Route
-          path={'/dashboard'}
-          element={<DashboardScreen accountInfo={accountInfo} />}
+          path={'/account'}
+          element={<Account accountInfo={accountInfo} />}
         >
-          <Route path={'/dashboard/'} element={<DashboardContent />} />
-          <Route path={'/dashboard/login'} element={<LoginForm />} />
-          <Route path={'/dashboard/register'} element={<RegisterForm />} />
+          <Route path={'/account/login'} element={<LoginForm />} />
+          <Route path={'/account/register'} element={<RegisterForm />} />
         </Route>
+        <Route path={'*'} element={<NotFound />} />
       </Routes>
     </>
   );

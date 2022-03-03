@@ -61,7 +61,7 @@ const widgetSettingSlice = createSlice({
       requestWidgetSettingUpdate.fulfilled,
       (state: WidgetSettingsState, {payload, meta}) => {
         if (state.widgetSettings) {
-          const settings = state.widgetSettings.get(meta.arg.widgetName);
+          const settings = state.widgetSettings[meta.arg.widgetName];
           if (settings) {
             const index = settings.findIndex(
               setting => setting.settingName === payload.settingName

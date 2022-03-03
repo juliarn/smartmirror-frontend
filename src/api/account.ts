@@ -29,6 +29,10 @@ export async function login(loginForm: LoginForm): Promise<void> {
   await createRequest('account/login', 'POST', loginForm);
 }
 
+export async function logout(): Promise<void> {
+  await createRequest('account/logout');
+}
+
 export async function getInfo(): Promise<AccountInfo | null> {
   const response = await createRequest('account/info');
   return response.ok ? await response.json() : null;

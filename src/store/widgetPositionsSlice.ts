@@ -61,7 +61,7 @@ const widgetPositionSlice = createSlice({
       requestWidgetPositionUpdate.fulfilled,
       (state: WidgetPositionsState, {payload, meta}) => {
         if (state.widgetPositions) {
-          state.widgetPositions.set(meta.arg.widgetName, payload);
+          state.widgetPositions[meta.arg.widgetName] = payload;
         }
       }
     );

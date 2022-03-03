@@ -1,7 +1,7 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
-import {useAccountInfo} from '../DashboardScreen';
+import {useAccountInfo} from '../Account';
 import {requestAccountInfo} from '../../../store/accountSlice';
 import store from '../../../store';
 import {login} from '../../../api/account';
@@ -14,10 +14,13 @@ const LoginForm = () => {
   const [passwordError, setPasswordError] = useState<string>('');
 
   const navigate = useNavigate();
+  const accountInfo = useAccountInfo();
 
-  if (useAccountInfo()) {
-    navigate('/dashboard');
-  }
+  useEffect(() => {
+    if (accountInfo) {
+      navigate('/');
+    }
+  }, [accountInfo, navigate]);
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -78,7 +81,7 @@ const LoginForm = () => {
             No account?{' '}
             <Link
               className="text-sm text-center text-blue-500 hover:text-blue-800"
-              to="/dashboard/register"
+              to="/account/register"
             >
               Register
             </Link>

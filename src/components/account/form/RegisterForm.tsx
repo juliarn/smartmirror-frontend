@@ -1,8 +1,8 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
 import {register} from '../../../api/account';
-import {useAccountInfo} from '../DashboardScreen';
+import {useAccountInfo} from '../Account';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState<string>('');
@@ -16,10 +16,13 @@ const RegisterForm = () => {
   const [repeatPasswordError, setRepeatPasswordError] = useState<string>('');
 
   const navigate = useNavigate();
+  const accountInfo = useAccountInfo();
 
-  if (useAccountInfo()) {
-    navigate('/dashboard');
-  }
+  useEffect(() => {
+    if (accountInfo) {
+      navigate('/');
+    }
+  }, [accountInfo, navigate]);
 
   const handleRegister = async (event: FormEvent) => {
     event.preventDefault();
@@ -50,7 +53,7 @@ const RegisterForm = () => {
     if (errorMessage) {
       setUsernameError(errorMessage + '.');
     } else {
-      navigate('/dashboard/login', {replace: true});
+      navigate('/account/login');
     }
   };
 
@@ -106,7 +109,7 @@ const RegisterForm = () => {
             Already registered?{' '}
             <Link
               className="text-sm text-center text-blue-500 hover:text-blue-800"
-              to="/dashboard/login"
+              to="/account/login"
             >
               Login
             </Link>

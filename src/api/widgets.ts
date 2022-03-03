@@ -18,7 +18,9 @@ export interface WidgetPosition {
   y: number;
 }
 
-export type WidgetPositions = Map<string, WidgetPosition>;
+export interface WidgetPositions {
+  [widgetName: string]: WidgetPosition;
+}
 
 export interface UpdateWidgetPositionForm extends WidgetPosition {
   widgetName: string;
@@ -29,7 +31,9 @@ export interface WidgetSetting {
   value: string;
 }
 
-export type WidgetSettings = Map<string, WidgetSetting[]>;
+export interface WidgetSettings {
+  [widgetName: string]: WidgetSetting[];
+}
 
 export interface UpdateWidgetSettingForm extends WidgetSetting {
   widgetName: string;
