@@ -2,7 +2,7 @@ import React, {FormEvent, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
 import {useAccountInfo} from '../DashboardScreen';
-import {getAccountInfo} from '../../../store/accountSlice';
+import {requestAccountInfo} from '../../../store/accountSlice';
 import store from '../../../store';
 import {login} from '../../../api/account';
 
@@ -32,7 +32,7 @@ const LoginForm = () => {
     }
 
     await login({username, password});
-    const accountInfo = await store.dispatch(getAccountInfo()).unwrap();
+    const accountInfo = await store.dispatch(requestAccountInfo()).unwrap();
     if (accountInfo === null) {
       setUsernameError('Invalid username or password.');
       setPasswordError('Invalid username or password.');

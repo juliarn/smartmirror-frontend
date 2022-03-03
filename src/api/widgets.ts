@@ -47,12 +47,13 @@ export async function getPositions(): Promise<WidgetPositions> {
 
 export async function updatePosition(
   updateWidgetPositionForm: UpdateWidgetPositionForm
-): Promise<void> {
-  await createRequest(
+): Promise<WidgetPosition> {
+  const response = await createRequest(
     `widgets/positions/update/${updateWidgetPositionForm.widgetName}`,
     'POST',
     updateWidgetPositionForm
   );
+  return await response.json();
 }
 
 export async function getSettings(): Promise<WidgetSettings> {
@@ -61,12 +62,12 @@ export async function getSettings(): Promise<WidgetSettings> {
 }
 
 export async function updateSetting(
-  updateWidgetSettingsForm: UpdateWidgetPositionForm
-): Promise<void> {
+  updateWidgetSettingForm: UpdateWidgetSettingForm
+): Promise<WidgetSetting> {
   const response = await createRequest(
-    `widgets/settings/update/${updateWidgetSettingsForm.widgetName}`,
+    `widgets/settings/update/${updateWidgetSettingForm.widgetName}`,
     'POST',
-    updateWidgetSettingsForm
+    updateWidgetSettingForm
   );
   return await response.json();
 }

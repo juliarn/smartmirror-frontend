@@ -6,14 +6,14 @@ import LoginForm from './dashboard/form/LoginForm';
 import RegisterForm from './dashboard/form/RegisterForm';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store';
-import {getAccountInfo} from '../store/accountSlice';
+import {requestAccountInfo} from '../store/accountSlice';
 
 const App = () => {
   const {accountInfo} = useSelector((state: RootState) => state.account);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAccountInfo());
+    dispatch(requestAccountInfo());
   }, [dispatch]);
 
   return (

@@ -1,17 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {AccountInfo, getInfo} from '../api/account';
 
-export const getAccountInfo = createAsyncThunk<AccountInfo | null>(
-  'account/getInfo',
+export const requestAccountInfo = createAsyncThunk<AccountInfo | null>(
+  'account/requestAccountInfo',
   async () => {
     return await getInfo();
   }
 );
 
-export type AccountInfoState = AccountInfo | undefined | null;
+export type OptionalAccountInfo = AccountInfo | undefined | null;
 
 interface AccountState {
-  accountInfo: AccountInfoState;
+  accountInfo: OptionalAccountInfo;
 }
 
 const initialState = {
@@ -24,15 +24,15 @@ const accountSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(
-      getAccountInfo.fulfilled,
+      requestAccountInfo.fulfilled,
       (state: AccountState, {payload}) => {
         state.accountInfo = payload;
       }
     );
-    builder.addCase(getAccountInfo.pending, (state: AccountState) => {
+    builder.addCase(requestAccountInfo.pending, (state: AccountState) => {
       state.accountInfo = undefined;
     });
-    builder.addCase(getAccountInfo.rejected, (state: AccountState) => {
+    builder.addCase(requestAccountInfo.rejected, (state: AccountState) => {
       state.accountInfo = null;
     });
   },

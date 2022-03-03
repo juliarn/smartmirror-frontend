@@ -1,7 +1,15 @@
 import accountReducer from './accountSlice';
+import widgetsReducer from './widgetsSlice';
+import widgetSettingsReducer from './widgetSettingsSlice';
+import widgetPositionsReducer from './widgetPositionsSlice';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
-const rootReducer = combineReducers({account: accountReducer});
+const rootReducer = combineReducers({
+  account: accountReducer,
+  widgets: widgetsReducer,
+  widgetSettings: widgetSettingsReducer,
+  widgetPositions: widgetPositionsReducer,
+});
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',

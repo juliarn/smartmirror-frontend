@@ -1,8 +1,8 @@
 import React from 'react';
 import {Outlet, useOutletContext} from 'react-router-dom';
-import {AccountInfoState} from '../../store/accountSlice';
+import {OptionalAccountInfo} from '../../store/accountSlice';
 
-function DashboardScreen(props: {accountInfo: AccountInfoState}) {
+function DashboardScreen(props: {accountInfo: OptionalAccountInfo}) {
   return (
     <div className={'flex items-center min-h-screen bg-gray-50'}>
       <div className="container mx-auto">
@@ -20,7 +20,7 @@ function DashboardScreen(props: {accountInfo: AccountInfoState}) {
 }
 
 export function useAccountInfo() {
-  return useOutletContext<AccountInfoState>();
+  return useOutletContext<OptionalAccountInfo>();
 }
 
 export default DashboardScreen;
