@@ -1,5 +1,6 @@
 import React from 'react';
 import {Widget, WidgetSetting} from '../../api/widgets';
+import WidgetSettingContainer from './WidgetSettingContainer';
 
 interface WidgetContainerProps {
   widget: Widget;
@@ -14,7 +15,7 @@ const WidgetContainer = (props: WidgetContainerProps) => {
         <div className="border-transparent">
           <header className="flex justify-between items-center p-5 px-8">
             <span className="text-grey-darkest font-thin text-2xl">
-              {props.widget.name}
+              {props.widget.displayName}
             </span>
             <div className="w-7 h-7 flex items-center justify-center">
               <img src={props.iconUrl} alt="" />
@@ -23,16 +24,24 @@ const WidgetContainer = (props: WidgetContainerProps) => {
         </div>
       </div>
       <div className="bg-grey-lightest border-indigo rounded">
-        <div>
-          {props.settings.map(setting => (
-            <div
-              key={setting.settingName}
-              className="px-8 py-3 text-grey-darkest"
-            >
-              <div className="pl-4">{setting.settingName}</div>
-            </div>
-          ))}
-        </div>
+        {props.settings.map(setting => (
+          <WidgetSettingContainer
+            key={setting.settingName}
+            widget={props.widget}
+            setting={setting}
+            defaultSetting={
+              props.widget.defaultSettings.find(
+                defaultSetting =>
+                  defaultSetting.settingName === setting.settingName
+              ) ?? {
+                settingName: setting.settingName,
+                displayName: setting.settingName,
+                defaultValue: setting.value,
+                acceptedValues: null,
+              }
+            }
+          />
+        ))}
       </div>
     </div>
   );

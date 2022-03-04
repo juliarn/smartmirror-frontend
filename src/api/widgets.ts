@@ -2,14 +2,16 @@ import createRequest from './index';
 
 export interface Widget {
   name: string;
+  displayName: string;
   defaultSettings: DefaultWidgetSetting[];
   requiresServiceAuth: boolean;
 }
 
 export interface DefaultWidgetSetting {
   settingName: string;
+  displayName: string;
   defaultValue: string;
-  acceptedValues: string[];
+  acceptedValues: string[] | null;
 }
 
 export interface WidgetPosition {
