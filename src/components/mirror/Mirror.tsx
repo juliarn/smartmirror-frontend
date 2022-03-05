@@ -5,13 +5,15 @@ import {OptionalAccountInfo} from '../../store/accountSlice';
 import {useNavigate} from 'react-router-dom';
 import {requestWidgetPositions} from '../../store/widgetPositionsSlice';
 import {PositionArea} from '../../api/widgets';
+import TimeWidget from './widgets/TimeWidget';
 
 interface MirrorProps {
   accountInfo: OptionalAccountInfo;
   edit?: boolean;
 }
 
-const Mirror = (props: MirrorProps) => {
+const Mirror = ({accountInfo}: MirrorProps) => {
+  const {widgets} = useSelector((state: RootState) => state.widgets);
   const {widgetPositions} = useSelector(
     (state: RootState) => state.widgetPositions
   );
@@ -19,47 +21,21 @@ const Mirror = (props: MirrorProps) => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
 
-  console.log(Object.values(PositionArea));
-
   const areaRefs = {} as {
     [area: string]: RefObject<HTMLDivElement>;
   };
-  Object.keys(PositionArea)
-    .filter(value => isNaN(Number(value)))
-    .forEach(area => (areaRefs[area] = useRef<HTMLDivElement>(null)));
+  Object.keys(PositionArea).forEach(
+    area => (areaRefs[area] = useRef<HTMLDivElement>(null))
+  );
 
   useEffect(() => {
-    if (props.accountInfo === null) {
+    if (accountInfo === null) {
       navigate('/account/login');
       return;
     }
 
-    dispatch(requestWidgetPositions()).unwrap;
-  }, [dispatch]);
-
-  const getAreaAnchorPoint = (
-    area: PositionArea,
-    rect: DOMRect
-  ): {x: number; y: number} => {
-    const areaName = area.toString();
-
-    let x = 0;
-    let y = 0;
-
-    if (areaName.endsWith('CENTER')) {
-      x = rect.x + rect.width / 2;
-    } else if (areaName.endsWith('RIGHT')) {
-      x = rect.right;
-    }
-
-    if (areaName.startsWith('MIDDLE')) {
-      y = rect.y + rect.height / 2;
-    } else if (areaName.startsWith('BOTTOM')) {
-      y = rect.bottom;
-    }
-
-    return {x, y};
-  };
+    dispatch(requestWidgetPositions());
+  }, [navigate, dispatch]);
 
   return (
     <div className="min-h-screen min-w-full bg-black">
@@ -105,6 +81,23 @@ const Mirror = (props: MirrorProps) => {
           className="min-h-1/3 w-1/3 border-white border"
         />
       </div>
+      {widgetPositions && widgets && (
+        <TimeWidget
+          widget={
+            widgets.find(widget => widget.name === 'time') ?? {
+              name: 'time',
+              displayName: 'Time',
+              defaultSettings: [],
+              iconUrl: '',
+              requiresServiceAuth: false,
+            }
+          }
+          position={widgetPositions['time']}
+          getAreaElement={area =>
+            areaRefs[area] ? areaRefs[area].current : null
+          }
+        />
+      )}
     </div>
   );
 };
