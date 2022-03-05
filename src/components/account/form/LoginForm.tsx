@@ -3,8 +3,9 @@ import {Link, useNavigate} from 'react-router-dom';
 import FormField from './FormField';
 import {useAccountInfo} from '../Account';
 import {requestAccountInfo} from '../../../store/accountSlice';
-import store from '../../../store';
 import {login} from '../../../api/account';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../../store';
 
 const LoginForm = () => {
   const [username, setUsername] = useState<string>('');
@@ -14,6 +15,7 @@ const LoginForm = () => {
   const [passwordError, setPasswordError] = useState<string>('');
 
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const accountInfo = useAccountInfo();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const LoginForm = () => {
     }
 
     await login({username, password});
-    const accountInfo = await store.dispatch(requestAccountInfo()).unwrap();
+    const accountInfo = await dispatch(requestAccountInfo()).unwrap();
     if (accountInfo === null) {
       setUsernameError('Invalid username or password.');
       setPasswordError('Invalid username or password.');

@@ -8,6 +8,7 @@ export default function createRequest(
     method,
     credentials: 'include',
     mode: 'cors',
+    redirect: 'manual',
     headers: {
       'content-type': 'application/json',
       'access-control-allow-origin': '*',

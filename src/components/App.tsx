@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store';
 import {requestAccountInfo} from '../store/accountSlice';
 import NotFound from './NotFound';
+import Mirror from './mirror/Mirror';
 
 const App = () => {
   const {accountInfo} = useSelector((state: RootState) => state.account);
@@ -28,6 +29,10 @@ const App = () => {
           <Route path={'/account/login'} element={<LoginForm />} />
           <Route path={'/account/register'} element={<RegisterForm />} />
         </Route>
+        <Route
+          path={'/mirror'}
+          element={<Mirror accountInfo={accountInfo} />}
+        />
         <Route path={'*'} element={<NotFound />} />
       </Routes>
     </>

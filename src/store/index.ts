@@ -2,6 +2,7 @@ import accountReducer from './accountSlice';
 import widgetsReducer from './widgetsSlice';
 import widgetSettingsReducer from './widgetSettingsSlice';
 import widgetPositionsReducer from './widgetPositionsSlice';
+import serviceAuthReducer from './serviceAuthSlice';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
@@ -9,6 +10,7 @@ const rootReducer = combineReducers({
   widgets: widgetsReducer,
   widgetSettings: widgetSettingsReducer,
   widgetPositions: widgetPositionsReducer,
+  serviceAuth: serviceAuthReducer,
 });
 
 const store = configureStore({

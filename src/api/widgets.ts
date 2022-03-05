@@ -3,6 +3,7 @@ import createRequest from './index';
 export interface Widget {
   name: string;
   displayName: string;
+  iconUrl: string;
   defaultSettings: DefaultWidgetSetting[];
   requiresServiceAuth: boolean;
 }
@@ -15,9 +16,21 @@ export interface DefaultWidgetSetting {
 }
 
 export interface WidgetPosition {
-  area: string;
+  area: PositionArea;
   x: number;
   y: number;
+}
+
+export enum PositionArea {
+  TOP_LEFT,
+  TOP_CENTER,
+  TOP_RIGHT,
+  MIDDLE_LEFT,
+  MIDDLE_CENTER,
+  MIDDLE_RIGHT,
+  BOTTOM_LEFT,
+  BOTTOM_CENTER,
+  BOTTOM_RIGHT,
 }
 
 export interface WidgetPositions {
