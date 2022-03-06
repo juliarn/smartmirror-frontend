@@ -1,10 +1,11 @@
 import React, {RefObject, useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../store';
+import {RootState} from '../../store';
 import {OptionalAccountInfo} from '../../store/accountSlice';
 import {useNavigate} from 'react-router-dom';
+import {requestWidgets} from '../../store/widgetsSlice';
 import {requestWidgetPositions} from '../../store/widgetPositionsSlice';
-import {PositionArea} from '../../api/widgets';
+import {PositionArea, Widget} from '../../api/widgets';
 import TimeWidget from './widgets/TimeWidget';
 
 interface MirrorProps {
@@ -12,14 +13,14 @@ interface MirrorProps {
   edit?: boolean;
 }
 
-const Mirror = ({accountInfo}: MirrorProps) => {
+const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
   const {widgets} = useSelector((state: RootState) => state.widgets);
   const {widgetPositions} = useSelector(
     (state: RootState) => state.widgetPositions
   );
 
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const areaRefs = {} as {
     [area: string]: RefObject<HTMLDivElement>;
@@ -34,70 +35,61 @@ const Mirror = ({accountInfo}: MirrorProps) => {
       return;
     }
 
+    dispatch(requestWidgets());
     dispatch(requestWidgetPositions());
-  }, [navigate, dispatch]);
+  }, [accountInfo]);
+
+  const rowClasses = 'min-h-[33vh] flex justify-between';
+  const columnClasses = `min-h-1/3 w-1/3 ${edit ? 'border-white border' : ''}`;
 
   return (
     <div className="min-h-screen min-w-full bg-black">
-      <div className="min-h-[33vh] flex justify-between">
-        <div
-          ref={areaRefs[PositionArea.TOP_LEFT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.TOP_CENTER]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.TOP_RIGHT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-      </div>
-      <div className="min-h-[33vh] flex justify-between">
-        <div
-          ref={areaRefs[PositionArea.MIDDLE_LEFT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.MIDDLE_CENTER]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.MIDDLE_RIGHT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-      </div>
-      <div className="min-h-[33vh] flex justify-between">
-        <div
-          ref={areaRefs[PositionArea.BOTTOM_LEFT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.BOTTOM_CENTER]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-        <div
-          ref={areaRefs[PositionArea.BOTTOM_RIGHT]}
-          className="min-h-1/3 w-1/3 border-white border"
-        />
-      </div>
       {widgetPositions && widgets && (
         <TimeWidget
-          widget={
-            widgets.find(widget => widget.name === 'time') ?? {
-              name: 'time',
-              displayName: 'Time',
-              defaultSettings: [],
-              iconUrl: '',
-              requiresServiceAuth: false,
-            }
-          }
+          widget={widgets.find(widget => widget.name === 'time') as Widget}
           position={widgetPositions['time']}
           getAreaElement={area =>
             areaRefs[area] ? areaRefs[area].current : null
           }
+          edit={edit}
         />
       )}
+      <div className={rowClasses}>
+        <div ref={areaRefs[PositionArea.TOP_LEFT]} className={columnClasses} />
+        <div
+          ref={areaRefs[PositionArea.TOP_CENTER]}
+          className={columnClasses}
+        />
+        <div ref={areaRefs[PositionArea.TOP_RIGHT]} className={columnClasses} />
+      </div>
+      <div className={rowClasses}>
+        <div
+          ref={areaRefs[PositionArea.MIDDLE_LEFT]}
+          className={columnClasses}
+        />
+        <div
+          ref={areaRefs[PositionArea.MIDDLE_CENTER]}
+          className={columnClasses}
+        />
+        <div
+          ref={areaRefs[PositionArea.MIDDLE_RIGHT]}
+          className={columnClasses}
+        />
+      </div>
+      <div className={rowClasses}>
+        <div
+          ref={areaRefs[PositionArea.BOTTOM_LEFT]}
+          className={columnClasses}
+        />
+        <div
+          ref={areaRefs[PositionArea.BOTTOM_CENTER]}
+          className={columnClasses}
+        />
+        <div
+          ref={areaRefs[PositionArea.BOTTOM_RIGHT]}
+          className={columnClasses}
+        />
+      </div>
     </div>
   );
 };

@@ -16,7 +16,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(requestAccountInfo());
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
@@ -32,6 +32,10 @@ const App = () => {
         <Route
           path={'/mirror'}
           element={<Mirror accountInfo={accountInfo} />}
+        />
+        <Route
+          path={'/mirror/edit'}
+          element={<Mirror accountInfo={accountInfo} edit={true} />}
         />
         <Route path={'*'} element={<NotFound />} />
       </Routes>

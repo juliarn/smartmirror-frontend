@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Widget, WidgetSetting} from '../../api/widgets';
+import {DefaultWidgetSetting, Widget, WidgetSetting} from '../../api/widgets';
 import WidgetSettingContainer from './WidgetSettingContainer';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';
@@ -20,7 +20,7 @@ const WidgetContainer = (props: WidgetContainerProps) => {
 
   useEffect(() => {
     dispatch(requestHasServiceAuth(props.widget.name));
-  }, [dispatch]);
+  }, []);
 
   const serviceName = props.widget.name;
   const hasServiceAuth = serviceAuth[serviceName];
@@ -78,12 +78,7 @@ const WidgetContainer = (props: WidgetContainerProps) => {
                 props.widget.defaultSettings.find(
                   defaultSetting =>
                     defaultSetting.settingName === setting.settingName
-                ) ?? {
-                  settingName: setting.settingName,
-                  displayName: setting.settingName,
-                  defaultValue: setting.value,
-                  acceptedValues: null,
-                }
+                ) as DefaultWidgetSetting
               }
             />
           ))}

@@ -22,7 +22,7 @@ const LoginForm = () => {
     if (accountInfo) {
       navigate('/');
     }
-  }, [accountInfo, navigate]);
+  }, [accountInfo]);
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();

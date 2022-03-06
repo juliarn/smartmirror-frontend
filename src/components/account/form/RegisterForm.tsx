@@ -22,7 +22,7 @@ const RegisterForm = () => {
     if (accountInfo) {
       navigate('/');
     }
-  }, [accountInfo, navigate]);
+  }, [accountInfo]);
 
   const handleRegister = async (event: FormEvent) => {
     event.preventDefault();

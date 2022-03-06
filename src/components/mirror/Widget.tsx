@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useEffect, useRef} from 'react';
+import React, {FunctionComponent, useEffect, useRef, useState} from 'react';
 import {
   PositionArea,
   Widget as WidgetType,
@@ -12,15 +12,19 @@ export interface WidgetProps {
   widget: WidgetType;
   position: WidgetPosition;
   getAreaElement: (area: PositionArea) => HTMLDivElement | null;
+  edit: boolean;
 }
 
 const Widget: FunctionComponent<WidgetProps> = ({
   widget,
   position,
   getAreaElement,
+  edit,
   children,
 }) => {
+  const [absolutePosition, setAbsolutePosition] = useState({x: 0, y: 0});
   const widgetRef = useRef<HTMLDivElement>(null);
+
   const dispatch = useDispatch();
 
   const getAreaAnchorPoint = (
@@ -46,6 +50,15 @@ const Widget: FunctionComponent<WidgetProps> = ({
   };
 
   useEffect(() => {
+    loadWidgetPosition();
+
+    const resizeListener = () => loadWidgetPosition();
+    window.addEventListener('resize', resizeListener);
+
+    return () => window.removeEventListener('resize', resizeListener);
+  }, [position]);
+
+  const loadWidgetPosition = () => {
     const widgetElement = widgetRef.current;
     const areaElement = getAreaElement(position.area);
 
@@ -65,19 +78,21 @@ const Widget: FunctionComponent<WidgetProps> = ({
         y -= widgetElement.getBoundingClientRect().height;
       }
 
-      console.log('LOADING ' + position.area + ' ' + x + ' ' + y);
-
-      widgetElement.style.left = x.toString();
-      widgetElement.style.top = y.toString();
+      setAbsolutePosition({x, y});
     }
-  });
+  };
 
   const updateWidgetPosition = () => {
     const widgetElement = widgetRef.current;
 
     if (widgetElement) {
       const widgetRect = widgetElement.getBoundingClientRect();
-      console.log(widgetRect);
+
+      const isInsideRect = (rect: DOMRect, x: number, y: number) => {
+        return (
+          x >= rect.x && x <= rect.right && y >= rect.y && y <= rect.bottom
+        );
+      };
 
       const {area, areaRect} = Object.keys(PositionArea)
         .map(area => {
@@ -91,30 +106,25 @@ const Widget: FunctionComponent<WidgetProps> = ({
         .filter(
           ({areaRect}) =>
             areaRect &&
-            !(
-              widgetRect.right < areaRect.x ||
-              widgetRect.x > areaRect.right ||
-              widgetRect.bottom < areaRect.y ||
-              widgetRect.x > areaRect.bottom
-            )
+            (isInsideRect(areaRect, widgetRect.x, widgetRect.y) ||
+              isInsideRect(areaRect, widgetRect.right, widgetRect.y) ||
+              isInsideRect(areaRect, widgetRect.right, widgetRect.bottom) ||
+              isInsideRect(areaRect, widgetRect.x, widgetRect.bottom))
         )
         .map(({area, areaRect}) => {
-          let overlap = 0;
+          areaRect = areaRect as DOMRect;
 
-          if (areaRect) {
-            const overlapWidth =
-              Math.min(widgetRect.right, areaRect.right) -
-              Math.max(widgetRect.left, areaRect.left);
-            const overlapHeight =
-              Math.min(widgetRect.bottom, areaRect.bottom) -
-              Math.max(widgetRect.top, areaRect.top);
+          const overlapWidth =
+            Math.min(widgetRect.right, areaRect.right) -
+            Math.max(widgetRect.left, areaRect.left);
+          const overlapHeight =
+            Math.min(widgetRect.bottom, areaRect.bottom) -
+            Math.max(widgetRect.top, areaRect.top);
 
-            overlap = overlapWidth * overlapHeight;
-          }
-
+          const overlap = overlapWidth * overlapHeight;
           return {
             area,
-            areaRect,
+            areaRect: areaRect,
             overlap,
           };
         })
@@ -122,34 +132,37 @@ const Widget: FunctionComponent<WidgetProps> = ({
           return previous.overlap > current.overlap ? previous : current;
         });
 
-      if (areaRect) {
-        const anchorPoint = getAreaAnchorPoint(area, areaRect);
+      const anchorPoint = getAreaAnchorPoint(area, areaRect);
+      const x =
+        (area.endsWith('RIGHT') ? widgetRect.right : widgetRect.left) -
+        anchorPoint.x;
+      const y =
+        (area.startsWith('BOTTOM') ? widgetRect.bottom : widgetRect.top) -
+        anchorPoint.y;
 
-        const x =
-          (area.endsWith('RIGHT') ? widgetRect.right : widgetRect.left) -
-          anchorPoint.x;
-        const y =
-          (area.startsWith('BOTTOM') ? widgetRect.bottom : widgetRect.top) -
-          anchorPoint.y;
-
-        console.log('SAVING ' + area + ' ' + widgetRect.x + ' ' + widgetRect.y);
-
-        dispatch(
-          requestWidgetPositionUpdate({
-            area: area as PositionArea,
-            widgetName: widget.name,
-            x,
-            y,
-          })
-        );
-      }
+      setAbsolutePosition({x: widgetRect.x, y: widgetRect.y});
+      dispatch(
+        requestWidgetPositionUpdate({
+          area: area as PositionArea,
+          widgetName: widget.name,
+          x,
+          y,
+        })
+      );
     }
   };
 
   return (
-    <Draggable bounds={'parent'} onStop={updateWidgetPosition}>
+    <Draggable
+      disabled={!edit}
+      position={absolutePosition}
+      bounds={'parent'}
+      onStop={updateWidgetPosition}
+    >
       <div
-        className="absolute border-white border select-none cursor-grab"
+        className={`absolute select-none ${
+          edit ? 'p-1 border-white border cursor-grab' : ''
+        }`}
         ref={widgetRef}
       >
         {children}

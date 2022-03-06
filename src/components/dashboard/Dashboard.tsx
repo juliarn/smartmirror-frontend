@@ -26,7 +26,7 @@ const Dashboard = (props: {accountInfo: OptionalAccountInfo}) => {
 
     dispatch(requestWidgets());
     dispatch(requestWidgetSettings());
-  }, [accountInfo, navigate, dispatch]);
+  }, [accountInfo]);
 
   const handleLogout = async () => {
     dispatch(requestLogout());
