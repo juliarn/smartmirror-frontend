@@ -3,6 +3,7 @@ import {
   PositionArea,
   Widget as WidgetType,
   WidgetPosition,
+  WidgetSetting,
 } from '../../api/widgets';
 import Draggable from 'react-draggable';
 import {useDispatch} from 'react-redux';
@@ -13,6 +14,10 @@ export interface WidgetProps {
   position: WidgetPosition;
   getAreaElement: (area: PositionArea) => HTMLDivElement | null;
   edit: boolean;
+}
+
+export interface WidgetSettingsProps extends WidgetProps {
+  settings: WidgetSetting[];
 }
 
 const Widget: FunctionComponent<WidgetProps> = ({
@@ -26,6 +31,17 @@ const Widget: FunctionComponent<WidgetProps> = ({
   const widgetRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
+
+  // Listen for position and children size updates to load the absolute position again
+  useEffect(() => loadWidgetPosition(), [position, children]);
+
+  // Add a listener for resize events, repositioning the widget
+  useEffect(() => {
+    const resizeListener = () => loadWidgetPosition();
+    window.addEventListener('resize', resizeListener);
+
+    return () => window.removeEventListener('resize', resizeListener);
+  }, []);
 
   const getAreaAnchorPoint = (
     area: PositionArea,
@@ -48,15 +64,6 @@ const Widget: FunctionComponent<WidgetProps> = ({
 
     return {x, y};
   };
-
-  useEffect(() => {
-    loadWidgetPosition();
-
-    const resizeListener = () => loadWidgetPosition();
-    window.addEventListener('resize', resizeListener);
-
-    return () => window.removeEventListener('resize', resizeListener);
-  }, [position]);
 
   const loadWidgetPosition = () => {
     const widgetElement = widgetRef.current;

@@ -7,6 +7,8 @@ import {requestWidgets} from '../../store/widgetsSlice';
 import {requestWidgetPositions} from '../../store/widgetPositionsSlice';
 import {PositionArea, Widget} from '../../api/widgets';
 import TimeWidget from './widgets/TimeWidget';
+import {requestWidgetSettings} from '../../store/widgetSettingsSlice';
+import WeatherWidget from './widgets/WeatherWidget';
 
 interface MirrorProps {
   accountInfo: OptionalAccountInfo;
@@ -15,6 +17,9 @@ interface MirrorProps {
 
 const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
   const {widgets} = useSelector((state: RootState) => state.widgets);
+  const {widgetSettings} = useSelector(
+    (state: RootState) => state.widgetSettings
+  );
   const {widgetPositions} = useSelector(
     (state: RootState) => state.widgetPositions
   );
@@ -29,6 +34,10 @@ const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
     area => (areaRefs[area] = useRef<HTMLDivElement>(null))
   );
 
+  const getAreaElement = (area: PositionArea) => {
+    return areaRefs[area] ? areaRefs[area].current : null;
+  };
+
   useEffect(() => {
     if (accountInfo === null) {
       navigate('/account/login');
@@ -36,6 +45,7 @@ const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
     }
 
     dispatch(requestWidgets());
+    dispatch(requestWidgetSettings());
     dispatch(requestWidgetPositions());
   }, [accountInfo]);
 
@@ -44,15 +54,22 @@ const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
 
   return (
     <div className="min-h-screen min-w-full bg-black">
-      {widgetPositions && widgets && (
-        <TimeWidget
-          widget={widgets.find(widget => widget.name === 'time') as Widget}
-          position={widgetPositions['time']}
-          getAreaElement={area =>
-            areaRefs[area] ? areaRefs[area].current : null
-          }
-          edit={edit}
-        />
+      {widgets && widgetSettings && widgetPositions && (
+        <div className="w-full h-screen absolute">
+          <TimeWidget
+            widget={widgets.find(widget => widget.name === 'time') as Widget}
+            position={widgetPositions['time']}
+            getAreaElement={getAreaElement}
+            edit={edit}
+          />
+          <WeatherWidget
+            widget={widgets.find(widget => widget.name === 'weather') as Widget}
+            settings={widgetSettings['weather']}
+            position={widgetPositions['weather']}
+            getAreaElement={getAreaElement}
+            edit={edit}
+          />
+        </div>
       )}
       <div className={rowClasses}>
         <div ref={areaRefs[PositionArea.TOP_LEFT]} className={columnClasses} />

@@ -13,21 +13,19 @@ export interface WeatherInfo {
   icon: string;
 }
 
-export interface WeatherState {
+export interface Weather {
   weather: WeatherInfo[];
   main: MainWeatherInfo;
   name: string;
   dt: number;
 }
 
-export interface FullWeatherState {
-  current: WeatherState;
-  forecast: WeatherState[];
+export interface FullWeather {
+  current: Weather;
+  forecast: Weather[];
 }
 
-export async function getWeatherState(
-  unit: string
-): Promise<FullWeatherState | null> {
+export async function getWeather(unit: string): Promise<FullWeather | null> {
   const language = window.navigator.language.split('-')[0];
   const position: GeolocationPosition | null = await new Promise(resolve =>
     window.navigator.geolocation.getCurrentPosition(resolve, () =>
