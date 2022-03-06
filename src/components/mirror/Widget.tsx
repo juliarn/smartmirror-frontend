@@ -28,12 +28,18 @@ const Widget: FunctionComponent<WidgetProps> = ({
   children,
 }) => {
   const [absolutePosition, setAbsolutePosition] = useState({x: 0, y: 0});
+  const [dragging, setDragging] = useState(false);
+
   const widgetRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
   // Listen for position and children size updates to load the absolute position again
-  useEffect(() => loadWidgetPosition(), [position, children]);
+  useEffect(() => {
+    if (!dragging) {
+      loadWidgetPosition();
+    }
+  }, [position, children]);
 
   // Add a listener for resize events, repositioning the widget
   useEffect(() => {
@@ -148,6 +154,7 @@ const Widget: FunctionComponent<WidgetProps> = ({
         anchorPoint.y;
 
       setAbsolutePosition({x: widgetRect.x, y: widgetRect.y});
+      setDragging(false);
       dispatch(
         requestWidgetPositionUpdate({
           area: area as PositionArea,
@@ -164,6 +171,7 @@ const Widget: FunctionComponent<WidgetProps> = ({
       disabled={!edit}
       position={absolutePosition}
       bounds={'parent'}
+      onStart={() => setDragging(true)}
       onStop={updateWidgetPosition}
     >
       <div

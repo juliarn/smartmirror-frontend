@@ -21,11 +21,25 @@ const WeatherWidget = ({
       setting => setting.settingName === 'tempUnit'
     );
 
+    let intervalId: NodeJS.Timeout;
+
     if (unitSetting) {
-      setUnit(unitSetting.value);
-      dispatch(requestWeather(unitSetting.value));
+      const unit = unitSetting.value;
+
+      setUnit(unit);
+      dispatch(requestWeather(unit));
+
+      intervalId = setInterval(
+        () => dispatch(requestWeather(unit)),
+        1000 * 60 * 10
+      );
     }
+
+    return () => clearInterval(intervalId);
   }, [settings]);
+
+  const unitSign = unit === 'standard' ? 'K' : '°';
+  const right = position.area.endsWith('RIGHT');
 
   return (
     <Widget
@@ -41,24 +55,45 @@ const WeatherWidget = ({
       >
         {fullWeather && (
           <div>
-            <div className="flex justify-between">
-              <h1 className="font-bold text-4xl">{`${Math.round(
+            <div className={`flex justify-${right ? 'end' : 'start'}`}>
+              <h1 className="font-bold text-5xl">{`${Math.round(
                 fullWeather.current.main.temp
-              )} ${unit === 'standard' ? 'K' : '°'}`}</h1>
+              )}${unitSign}`}</h1>
               <img
-                className="w-10 h-10"
+                className="w-12 h-12"
                 src={fullWeather.current.weather[0].icon}
                 alt=""
               />
             </div>
-            <p className="text-xl">
+            <p className="text-2xl">
               {fullWeather.current.weather[0].description}
             </p>
-            <p className="text-sm">{fullWeather.current.name}</p>
+            <p className="text-base">{fullWeather.current.name}</p>
+            <div className="flex pt-2">
+              {fullWeather.forecast.map(weather => (
+                <div
+                  key={weather.dt}
+                  className={`${right ? 'ml-3' : 'mr-3'} text-center text-sm`}
+                >
+                  <p>
+                    {new Date(weather.dt * 1000).toLocaleTimeString(
+                      window.navigator.language,
+                      {hour: 'numeric'}
+                    )}
+                  </p>
+                  <img
+                    className="w-8 h-8 m-auto"
+                    src={weather.weather[0].icon}
+                    alt=""
+                  />
+                  <p>{`${Math.round(weather.main.temp)}${unitSign}`}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
-        {!fullWeather && edit && (
-          <h1 className="font-bold text-3xl">
+        {fullWeather === null && edit && (
+          <h1 className="font-bold text-xl">
             Allow location access to display weather
           </h1>
         )}

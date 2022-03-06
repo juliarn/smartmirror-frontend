@@ -5,8 +5,8 @@ const TimeWidget = ({widget, position, getAreaElement, edit}: WidgetProps) => {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
-    const timerId = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timerId);
+    const intervalId = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const language = window.navigator.language;
@@ -30,8 +30,8 @@ const TimeWidget = ({widget, position, getAreaElement, edit}: WidgetProps) => {
           position.area.endsWith('RIGHT') ? 'text-right' : ''
         }`}
       >
-        <h1 className="font-bold text-4xl">{time}</h1>
-        <p className="text-xl">{date}</p>
+        <h1 className="font-bold text-5xl">{time}</h1>
+        <p className="text-2xl">{date}</p>
       </div>
     </Widget>
   );
