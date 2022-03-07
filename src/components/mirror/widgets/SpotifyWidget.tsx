@@ -17,6 +17,9 @@ const SpotifyWidget = ({
 
   useEffect(() => {
     dispatch(requestSpotify());
+
+    const intervalId = setInterval(() => dispatch(requestSpotify()), 3000);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -31,6 +34,9 @@ const SpotifyWidget = ({
 
   console.log(spotify);
 
+  const right = position.area.endsWith('RIGHT');
+  const imageUrl = spotify?.item?.album?.images[0]?.url;
+
   return (
     <Widget
       widget={widget}
@@ -38,7 +44,30 @@ const SpotifyWidget = ({
       getAreaElement={getAreaElement}
       edit={edit}
     >
-      <div />
+      {(spotify?.isPlaying || edit) && (
+        <div className={`text-white ${right ? 'text-right' : ''}`}>
+          <p className="text-gray-500 text-base">
+            {deviceLabel.replace('%device%', spotify?.device?.name ?? 'Device')}
+          </p>
+          <div className={`flex justify-${right ? 'end' : 'start'}`}>
+            {imageUrl ? (
+              <img
+                className="w-36 h-36 mt-1"
+                draggable={false}
+                src={imageUrl}
+                alt=""
+              />
+            ) : (
+              <div className="w-36 h-36 mt-1 bg-gray-500" />
+            )}
+          </div>
+          <p className="text-2xl">{spotify?.item?.name ?? 'Name'}</p>
+          <p className="text-lg">
+            {spotify?.item?.artists?.map(artist => artist.name).join(', ') ??
+              'Artist'}
+          </p>
+        </div>
+      )}
     </Widget>
   );
 };

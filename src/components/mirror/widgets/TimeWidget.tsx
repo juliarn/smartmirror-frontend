@@ -30,8 +30,8 @@ const TimeWidget = ({widget, position, getAreaElement, edit}: WidgetProps) => {
           position.area.endsWith('RIGHT') ? 'text-right' : ''
         }`}
       >
-        <h1 className="font-bold text-5xl">{time}</h1>
-        <p className="text-2xl">{date}</p>
+        <h1 className="font-bold text-7xl">{time}</h1>
+        <p className="text-3xl">{date}</p>
       </div>
     </Widget>
   );

@@ -48,32 +48,29 @@ const WeatherWidget = ({
       getAreaElement={getAreaElement}
       edit={edit}
     >
-      <div
-        className={`text-white ${
-          position.area.endsWith('RIGHT') ? 'text-right' : ''
-        }`}
-      >
+      <div className={`text-white ${right ? 'text-right' : ''}`}>
         {fullWeather && (
           <div>
             <div className={`flex justify-${right ? 'end' : 'start'}`}>
-              <h1 className="font-bold text-5xl">{`${Math.round(
+              <h1 className="font-bold text-7xl">{`${Math.round(
                 fullWeather.current.main.temp
               )}${unitSign}`}</h1>
               <img
-                className="w-12 h-12"
+                className="w-16 h-16 my-auto"
+                draggable={false}
                 src={fullWeather.current.weather[0].icon}
                 alt=""
               />
             </div>
-            <p className="text-2xl">
+            <p className="text-4xl">
               {fullWeather.current.weather[0].description}
             </p>
-            <p className="text-base">{fullWeather.current.name}</p>
+            <p className="text-xl">{fullWeather.current.name}</p>
             <div className="flex pt-2">
               {fullWeather.forecast.map(weather => (
                 <div
                   key={weather.dt}
-                  className={`${right ? 'ml-3' : 'mr-3'} text-center text-sm`}
+                  className={`${right ? 'ml-4' : 'mr-4'} text-center text-lg`}
                 >
                   <p>
                     {new Date(weather.dt * 1000).toLocaleTimeString(
@@ -82,7 +79,8 @@ const WeatherWidget = ({
                     )}
                   </p>
                   <img
-                    className="w-8 h-8 m-auto"
+                    className="w-10 h-10 m-auto"
+                    draggable={false}
                     src={weather.weather[0].icon}
                     alt=""
                   />

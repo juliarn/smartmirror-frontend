@@ -3,7 +3,6 @@ import createRequest from './index';
 export interface Widget {
   name: string;
   displayName: string;
-  iconUrl: string;
   defaultSettings: DefaultWidgetSetting[];
   requiresServiceAuth: boolean;
 }

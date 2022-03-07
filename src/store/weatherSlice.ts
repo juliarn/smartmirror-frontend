@@ -27,9 +27,6 @@ const weatherSlice = createSlice({
         state.fullWeather = payload;
       }
     );
-    builder.addCase(requestWeather.pending, (state: WeatherState) => {
-      state.fullWeather = undefined;
-    });
     builder.addCase(requestWeather.rejected, (state: WeatherState) => {
       state.fullWeather = null;
     });

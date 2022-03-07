@@ -14,15 +14,15 @@ interface WidgetContainerProps {
   settings: WidgetSetting[];
 }
 
-const WidgetContainer = (props: WidgetContainerProps) => {
+const WidgetContainer = ({widget, settings}: WidgetContainerProps) => {
   const {serviceAuth} = useSelector((state: RootState) => state.serviceAuth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(requestHasServiceAuth(props.widget.name));
+    dispatch(requestHasServiceAuth(widget.name));
   }, []);
 
-  const serviceName = props.widget.name;
+  const serviceName = widget.name;
   const hasServiceAuth = serviceAuth[serviceName];
 
   const handleServiceAuthLogin = async () => {
@@ -39,10 +39,10 @@ const WidgetContainer = (props: WidgetContainerProps) => {
         <div className="border-transparent">
           <div className="flex justify-between items-center p-5 px-8">
             <span className="text-grey-darkest font-thin text-2xl">
-              {props.widget.displayName}
+              {widget.displayName}
             </span>
             <div className="flex items-center justify-center">
-              {props.widget.requiresServiceAuth && (
+              {widget.requiresServiceAuth && (
                 <div className="px-4 font-thin text-grey-darkest">
                   {!hasServiceAuth && (
                     <button
@@ -62,20 +62,24 @@ const WidgetContainer = (props: WidgetContainerProps) => {
                   )}
                 </div>
               )}
-              <img className="w-7 h-7 " src={props.widget.iconUrl} alt="" />
+              <img
+                className="w-7 h-7 "
+                src={require(`../../../public/image/widgets/${widget.name}.png`)}
+                alt=""
+              />
             </div>
           </div>
         </div>
       </div>
       <div className="my-2 bg-grey-lightest border-indigo rounded">
-        {(!props.widget.requiresServiceAuth || hasServiceAuth) &&
-          props.settings.map(setting => (
+        {(!widget.requiresServiceAuth || hasServiceAuth) &&
+          settings.map(setting => (
             <WidgetSettingContainer
               key={setting.settingName}
-              widget={props.widget}
+              widget={widget}
               setting={setting}
               defaultSetting={
-                props.widget.defaultSettings.find(
+                widget.defaultSettings.find(
                   defaultSetting =>
                     defaultSetting.settingName === setting.settingName
                 ) as DefaultWidgetSetting

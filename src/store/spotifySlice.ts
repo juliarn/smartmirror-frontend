@@ -25,9 +25,6 @@ const spotifySlice = createSlice({
         state.spotify = payload;
       }
     );
-    builder.addCase(requestSpotify.pending, (state: SpotifyState) => {
-      state.spotify = undefined;
-    });
     builder.addCase(requestSpotify.rejected, (state: SpotifyState) => {
       state.spotify = null;
     });
