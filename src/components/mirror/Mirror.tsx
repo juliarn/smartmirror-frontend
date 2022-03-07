@@ -9,6 +9,7 @@ import {PositionArea, Widget} from '../../api/widgets';
 import TimeWidget from './widgets/TimeWidget';
 import {requestWidgetSettings} from '../../store/widgetSettingsSlice';
 import WeatherWidget from './widgets/WeatherWidget';
+import SpotifyWidget from './widgets/SpotifyWidget';
 
 interface MirrorProps {
   accountInfo: OptionalAccountInfo;
@@ -66,6 +67,13 @@ const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
             widget={widgets.find(widget => widget.name === 'weather') as Widget}
             settings={widgetSettings['weather']}
             position={widgetPositions['weather']}
+            getAreaElement={getAreaElement}
+            edit={edit}
+          />
+          <SpotifyWidget
+            widget={widgets.find(widget => widget.name === 'spotify') as Widget}
+            settings={widgetSettings['spotify']}
+            position={widgetPositions['spotify']}
             getAreaElement={getAreaElement}
             edit={edit}
           />
