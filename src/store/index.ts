@@ -5,6 +5,7 @@ import widgetPositionsReducer from './widgetPositionsSlice';
 import serviceAuthReducer from './serviceAuthSlice';
 import weatherReducer from './weatherSlice';
 import spotifyReducer from './spotifySlice';
+import msoReducer from './msoSlice';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   serviceAuth: serviceAuthReducer,
   weather: weatherReducer,
   spotify: spotifyReducer,
+  mso: msoReducer,
 });
 
 const store = configureStore({
