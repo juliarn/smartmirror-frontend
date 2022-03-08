@@ -25,7 +25,7 @@ export interface FullWeather {
   forecast: Weather[];
 }
 
-export async function getWeather(unit: string): Promise<FullWeather | null> {
+export async function getWeather(): Promise<FullWeather | null> {
   const language = window.navigator.language.split('-')[0];
   const position: GeolocationPosition | null = await new Promise(resolve =>
     window.navigator.geolocation.getCurrentPosition(resolve, () =>
@@ -41,7 +41,6 @@ export async function getWeather(unit: string): Promise<FullWeather | null> {
     lat: position.coords.latitude,
     lon: position.coords.longitude,
     lang: language,
-    unit,
   });
   return await response.json();
 }

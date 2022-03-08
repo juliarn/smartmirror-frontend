@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Widget, {WidgetSettingsProps} from '../Widget';
 import {useDispatch, useSelector} from 'react-redux';
-import {requestWeather} from '../../../store/weatherSlice';
 import {RootState} from '../../../store';
+import {requestWeather} from '../../../store/weatherSlice';
 
 const WeatherWidget = ({
   widget,
@@ -17,25 +17,19 @@ const WeatherWidget = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unitSetting = settings.find(
-      setting => setting.settingName === 'tempUnit'
+    dispatch(requestWeather());
+
+    const intervalId = setInterval(
+      () => dispatch(requestWeather()),
+      1000 * 60 * 10
     );
-
-    let intervalId: NodeJS.Timeout;
-
-    if (unitSetting) {
-      const unit = unitSetting.value;
-
-      setUnit(unit);
-      dispatch(requestWeather(unit));
-
-      intervalId = setInterval(
-        () => dispatch(requestWeather(unit)),
-        1000 * 60 * 10
-      );
-    }
-
     return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    setUnit(
+      settings.find(setting => setting.settingName === 'tempUnit')?.value ?? ''
+    );
   }, [settings]);
 
   const unitSign = unit === 'standard' ? 'K' : '°';
@@ -51,7 +45,7 @@ const WeatherWidget = ({
       <div className={`text-white ${right ? 'text-right' : ''}`}>
         {fullWeather && (
           <div>
-            <div className={`flex justify-${right ? 'end' : 'start'}`}>
+            <div className={`flex ${right ? 'justify-end' : 'justify-start'}`}>
               <h1 className="font-bold text-7xl">{`${Math.round(
                 fullWeather.current.main.temp
               )}${unitSign}`}</h1>

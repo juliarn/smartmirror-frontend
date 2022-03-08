@@ -72,20 +72,19 @@ const WidgetContainer = ({widget, settings}: WidgetContainerProps) => {
         </div>
       </div>
       <div className="my-2 bg-grey-lightest border-indigo rounded">
-        {(!widget.requiresServiceAuth || hasServiceAuth) &&
-          settings.map(setting => (
-            <WidgetSettingContainer
-              key={setting.settingName}
-              widget={widget}
-              setting={setting}
-              defaultSetting={
-                widget.defaultSettings.find(
-                  defaultSetting =>
-                    defaultSetting.settingName === setting.settingName
-                ) as DefaultWidgetSetting
-              }
-            />
-          ))}
+        {settings.map(setting => (
+          <WidgetSettingContainer
+            key={setting.settingName}
+            widget={widget}
+            setting={setting}
+            defaultSetting={
+              widget.defaultSettings.find(
+                defaultSetting =>
+                  defaultSetting.settingName === setting.settingName
+              ) as DefaultWidgetSetting
+            }
+          />
+        ))}
       </div>
     </div>
   );

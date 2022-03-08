@@ -1,10 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {FullWeather, getWeather} from '../api/weather';
 
-export const requestWeather = createAsyncThunk<FullWeather | null, string>(
+export const requestWeather = createAsyncThunk<FullWeather | null>(
   'weather/requestWeather',
-  async (unit: string) => {
-    return await getWeather(unit);
+  async () => {
+    return await getWeather();
   }
 );
 

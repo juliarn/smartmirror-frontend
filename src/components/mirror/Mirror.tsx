@@ -59,6 +59,7 @@ const Mirror = ({accountInfo, edit = false}: MirrorProps) => {
         <div className="w-full h-screen absolute">
           <TimeWidget
             widget={widgets.find(widget => widget.name === 'time') as Widget}
+            settings={widgetSettings['time']}
             position={widgetPositions['time']}
             getAreaElement={getAreaElement}
             edit={edit}

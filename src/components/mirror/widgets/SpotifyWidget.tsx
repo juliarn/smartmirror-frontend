@@ -23,16 +23,11 @@ const SpotifyWidget = ({
   }, []);
 
   useEffect(() => {
-    const deviceLabelSetting = settings.find(
-      setting => setting.settingName === 'deviceLabel'
+    setDeviceLabel(
+      settings.find(setting => setting.settingName === 'deviceLabel')?.value ??
+        ''
     );
-
-    if (deviceLabelSetting) {
-      setDeviceLabel(deviceLabelSetting.value);
-    }
   }, [settings]);
-
-  console.log(spotify);
 
   const right = position.area.endsWith('RIGHT');
   const imageUrl = spotify?.item?.album?.images[0]?.url;
@@ -44,12 +39,12 @@ const SpotifyWidget = ({
       getAreaElement={getAreaElement}
       edit={edit}
     >
-      {(spotify?.isPlaying || edit) && (
+      {((spotify?.isPlaying && spotify?.item) || edit) && (
         <div className={`text-white ${right ? 'text-right' : ''}`}>
           <p className="text-gray-500 text-base">
             {deviceLabel.replace('%device%', spotify?.device?.name ?? 'Device')}
           </p>
-          <div className={`flex justify-${right ? 'end' : 'start'}`}>
+          <div className={`flex ${right ? 'justify-end' : 'justify-start'}`}>
             {imageUrl ? (
               <img
                 className="w-36 h-36 mt-1"

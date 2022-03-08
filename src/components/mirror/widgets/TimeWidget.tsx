@@ -1,19 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import Widget, {WidgetProps} from '../Widget';
+import Widget, {WidgetSettingsProps} from '../Widget';
 
-const TimeWidget = ({widget, position, getAreaElement, edit}: WidgetProps) => {
+const TimeWidget = ({
+  widget,
+  settings,
+  position,
+  getAreaElement,
+  edit,
+}: WidgetSettingsProps) => {
   const [now, setNow] = useState(new Date());
+  const [showSeconds, setShowSeconds] = useState(false);
+  const [showYear, setShowYear] = useState(false);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    setShowSeconds(
+      (settings.find(setting => setting.settingName === 'showSeconds')?.value ??
+        'false') === 'true'
+    );
+    setShowYear(
+      (settings.find(setting => setting.settingName === 'showYear')?.value ??
+        'false') === 'true'
+    );
+  }, []);
+
   const language = window.navigator.language;
-  const time = now.toLocaleTimeString(language);
+  const time = now.toLocaleTimeString(language, {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: showSeconds ? 'numeric' : undefined,
+  });
   const date = now.toLocaleString(language, {
     weekday: 'long',
-    year: 'numeric',
+    year: showYear ? 'numeric' : undefined,
     month: 'long',
     day: 'numeric',
   });
