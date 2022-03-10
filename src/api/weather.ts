@@ -1,5 +1,11 @@
 import createRequest from './index';
 
+export interface WeatherInfo {
+  main: string;
+  description: string;
+  icon: string;
+}
+
 export interface MainWeatherInfo {
   temp: number;
   feelsLike: number;
@@ -7,15 +13,16 @@ export interface MainWeatherInfo {
   tempMax: number;
 }
 
-export interface WeatherInfo {
-  main: string;
-  description: string;
-  icon: string;
+export interface SystemWeatherInfo {
+  country: string;
+  sunrise: number;
+  sunset: number;
 }
 
 export interface Weather {
   weather: WeatherInfo[];
   main: MainWeatherInfo;
+  sys: SystemWeatherInfo;
   name: string;
   dt: number;
 }

@@ -1,6 +1,3 @@
-import store from '../store';
-import {requestAccountInfo} from '../store/accountSlice';
-
 export default async function createRequest(
   url: string,
   method = 'GET',
@@ -18,10 +15,4 @@ export default async function createRequest(
     },
     body: body ? JSON.stringify(body) : null,
   });
-
-  if (response.status === 401) {
-    store.dispatch(requestAccountInfo());
-  }
-
-  return response;
 }

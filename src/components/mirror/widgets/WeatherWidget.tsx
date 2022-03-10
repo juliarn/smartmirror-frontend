@@ -59,7 +59,9 @@ const WeatherWidget = ({
             <p className="text-4xl">
               {fullWeather.current.weather[0].description}
             </p>
-            <p className="text-xl">{fullWeather.current.name}</p>
+            <p className="text-xl">
+              {fullWeather.current.name}, {fullWeather.current.sys.country}
+            </p>
             <div className="flex pt-2">
               {fullWeather.forecast.map(weather => (
                 <div

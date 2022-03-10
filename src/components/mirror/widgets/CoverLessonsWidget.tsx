@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Widget, {WidgetProps} from '../Widget';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../store';
@@ -18,6 +18,22 @@ const CoverLessonsWidget = ({
 
   const {coverLessons} = useSelector((root: RootState) => root.mso);
   const dispatch = useDispatch();
+
+  const dummyCoverLessons = useMemo(() => {
+    const dummyCoverLesson = {
+      date: new Date().toISOString(),
+      coveredTeacher: 'M. Mustermann',
+      teacher: null,
+      comment: 'free',
+      course: '',
+      subject: 'Maths',
+    };
+    return [
+      {period: 1, ...dummyCoverLesson},
+      {period: 2, ...dummyCoverLesson},
+      {period: 3, ...dummyCoverLesson},
+    ];
+  }, []);
 
   useEffect(() => {
     dispatch(requestCoverLessons());
@@ -51,26 +67,16 @@ const CoverLessonsWidget = ({
 
       setCoverLessonsToday(filterCoverLessons(now.getDay()));
       setCoverLessonsTomorrow(filterCoverLessons(now.getDay() + 1));
-    } else if (edit) {
-      const coverLesson = {
-        date: now.toISOString(),
-        coveredTeacher: 'M. Mustermann',
-        teacher: null,
-        comment: 'free',
-        course: '',
-        subject: 'Maths',
-      };
-
-      setCoverLessonsToday([
-        {period: 1, ...coverLesson},
-        {period: 2, ...coverLesson},
-        {period: 3, ...coverLesson},
-      ]);
     }
   }, [coverLessons]);
 
   const right = position.area.endsWith('RIGHT');
   const language = window.navigator.language;
+
+  const coverLessonsDaily =
+    edit && coverLessonsToday.length === 0 && coverLessonsTomorrow.length === 0
+      ? [dummyCoverLessons]
+      : [coverLessonsToday, coverLessonsTomorrow];
 
   return (
     <Widget
@@ -80,7 +86,7 @@ const CoverLessonsWidget = ({
       edit={edit}
     >
       <div className={`text-white ${right ? 'text-right' : ''}`}>
-        {[coverLessonsToday, coverLessonsTomorrow]
+        {coverLessonsDaily
           .filter(dayCoverLessons => dayCoverLessons.length > 0)
           .map(dayCoverLessons => (
             <div key={dayCoverLessons[0].date}>

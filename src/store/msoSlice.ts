@@ -24,7 +24,6 @@ const msoSlice = createSlice({
     builder.addCase(
       requestCoverLessons.fulfilled,
       (state: MsoState, {payload}) => {
-        console.log(payload);
         state.coverLessons = payload.coverLessons;
       }
     );
