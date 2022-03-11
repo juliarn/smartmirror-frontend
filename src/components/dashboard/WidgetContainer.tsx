@@ -8,6 +8,7 @@ import {
   requestRevokeServiceAuth,
 } from '../../store/serviceAuthSlice';
 import {serviceAuthLogin} from '../../api/serviceAuth';
+import widgetIcons from './widgetIcons';
 
 interface WidgetContainerProps {
   widget: Widget;
@@ -32,6 +33,8 @@ const WidgetContainer = ({widget, settings}: WidgetContainerProps) => {
   const handleServiceAuthRevoke = () => {
     dispatch(requestRevokeServiceAuth(serviceName));
   };
+
+  const widgetIcon = widgetIcons[widget.name];
 
   return (
     <div className="shadow mt-6">
@@ -62,11 +65,7 @@ const WidgetContainer = ({widget, settings}: WidgetContainerProps) => {
                   )}
                 </div>
               )}
-              <img
-                className="w-7 h-7 "
-                src={require(`../../../public/image/widgets/${widget.name}.png`)}
-                alt=""
-              />
+              {widgetIcon && React.createElement(widgetIcon, {size: '1.5em'})}
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ export default async function createRequest(
   body: object | null = null
 ): Promise<Response> {
   // TODO: change
-  const response = await fetch(`http://localhost:8080/api/${url}`, {
+  return await fetch(`http://localhost:8080/api/${url}`, {
     method,
     credentials: 'include',
     mode: 'cors',
